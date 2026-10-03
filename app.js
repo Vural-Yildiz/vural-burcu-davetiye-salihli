@@ -3,7 +3,7 @@ const CONFIG = {
   eventEnd: '2026-11-07T17:00:00+03:00',
   venue: 'Salihli Öğretmenevi',
   mapsQuery: 'Salihli Öğretmenevi ve Akşam Sanat Okulu, Aksoy Mahallesi Menderes Caddesi No:70, Salihli, Manisa',
-  musicSrc: '' // Müzik geldiğinde örn. 'assets/music.mp3'
+  musicSrc: 'videoplayback.m4a' // Repo kökündeki müzik
 };
 
 const $ = (s) => document.querySelector(s);
