@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Burcu & Vural//Salihli Düğünü//TR
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:burcu-vural-20261107-salihli@davetiye
+DTSTAMP:20261003T142400Z
+DTSTART;TZID=Europe/Istanbul:20261107T140000
+DTEND;TZID=Europe/Istanbul:20261107T170000
+SUMMARY:Burcu & Vural Düğünü
+LOCATION:Salihli Öğretmenevi\, Salihli\, Manisa
+DESCRIPTION:Burcu ve Vural'ın düğünü. 7 Kasım 2026 Cumartesi\, 14:00–17:00.
+END:VEVENT
+END:VCALENDAR
