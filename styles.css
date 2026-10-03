@@ -29,7 +29,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .ambient { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; background: #07101a; }
 .ambient__landscape {
   position: absolute; inset: 36% -18% -16%;
-  background: linear-gradient(to bottom, rgba(7,16,26,.98) 0%, rgba(7,16,26,.76) 28%, rgba(7,16,26,.88) 100%), url('invitation.svg') center 70% / cover no-repeat;
+  background: linear-gradient(to bottom, rgba(7,16,26,.98) 0%, rgba(7,16,26,.76) 28%, rgba(7,16,26,.88) 100%), url('invitation-approved.jpg') center 70% / cover no-repeat;
   filter: saturate(.72) blur(7px);
   opacity: .34; transform: scale(1.07);
 }
