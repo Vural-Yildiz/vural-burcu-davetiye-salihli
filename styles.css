@@ -120,6 +120,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .invitation__wrap { position: relative; z-index: 2; width: min(100%, 510px); margin: 0 auto; }
 .art-card { position: relative; margin: 0; border-radius: 22px; overflow: hidden; box-shadow: 0 28px 60px rgba(0,0,0,.46), 0 2px 1px rgba(255,245,221,.08) inset; background: #e8dcc7; transform: translateY(16px) scale(.965); opacity: 0; animation: artSettle 1.4s .15s cubic-bezier(.2,.8,.2,1) forwards; }
 .art-card img { display: block; width: 100%; height: auto; aspect-ratio: 2 / 3; object-fit: cover; }
+.art-card__surname { position: absolute; z-index: 4; top: 56.45%; font-family: Georgia, "Times New Roman", serif; font-size: clamp(7.5px, 1.9vw, 11.5px); font-weight: 400; line-height: 1; color: #3d3025; letter-spacing: .015em; white-space: nowrap; transform: rotate(-1.05deg); transform-origin: left center; text-shadow: 0 .5px 0 rgba(255,255,255,.28); pointer-events: none; }
+.art-card__surname--bride { left: 46.2%; }
+.art-card__surname--groom { left: 77.25%; letter-spacing: .025em; }
 .art-card__edge { position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(246,221,173,.24), inset 0 0 22px rgba(255,255,255,.04); pointer-events: none; }
 .art-card__foil { position: absolute; top: -20%; bottom: -20%; left: -40%; width: 24%; transform: skewX(-16deg); background: linear-gradient(90deg,transparent,rgba(255,244,214,.18),rgba(255,248,229,.33),transparent); mix-blend-mode: screen; filter: blur(2px); pointer-events: none; animation: finalFoil 4.8s 1.1s ease-in-out infinite; }
 
