@@ -199,3 +199,327 @@ button, a { -webkit-tap-highlight-color: transparent; }
   *,*::before,*::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   .prelude__monogram .stroke, .envelope__etch .etch { stroke-dashoffset: 0 !important; }
 }
+
+
+/* ===== Burcu & Vural — cinematic two-photo opening ===== */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0,0,0,0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.opening--photo {
+  display: grid;
+  place-items: center;
+  padding: max(var(--safe-top), 8px) 0 max(var(--safe-bottom), 8px);
+  background:
+    radial-gradient(circle at 50% 68%, rgba(176,121,54,.13), transparent 34%),
+    linear-gradient(180deg,#020a12 0%,#05111b 48%,#06121c 100%);
+  isolation: isolate;
+}
+.opening--photo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 54%, transparent 36%, rgba(0,0,0,.22) 72%, rgba(0,0,0,.56) 100%),
+    linear-gradient(90deg,rgba(0,0,0,.16),transparent 12%,transparent 88%,rgba(0,0,0,.16));
+}
+.opening--photo::after {
+  z-index: 9;
+  box-shadow: inset 0 0 120px rgba(0,0,0,.46);
+}
+
+.opening-photo {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 100%;
+}
+.opening-photo__frame {
+  position: relative;
+  width: min(100vw, calc((100svh - var(--safe-top) - var(--safe-bottom) - 12px) * .6674), 580px);
+  aspect-ratio: 941 / 1410;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 53%,rgba(197,145,76,.11),transparent 34%),
+    #05111b;
+  box-shadow: 0 38px 86px rgba(0,0,0,.34);
+  transform: translateZ(0);
+}
+.opening-photo__frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1px rgba(228,190,124,.05),
+    inset 0 0 72px rgba(0,0,0,.18);
+}
+
+.opening-photo__loading {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-content: center;
+  gap: 18px;
+  color: rgba(226,199,145,.65);
+  transition: opacity .7s ease;
+}
+.opening-photo__loading-mark {
+  font: 46px/1 Georgia, serif;
+  letter-spacing: -.08em;
+  text-shadow: 0 0 30px rgba(198,145,69,.16);
+}
+.opening-photo__loading-mark span {
+  font-size: .56em;
+  margin: 0 .1em;
+  opacity: .7;
+}
+.opening-photo__loading-line {
+  display: block;
+  width: 92px;
+  height: 1px;
+  margin: 0 auto;
+  background: linear-gradient(90deg,transparent,rgba(224,187,119,.7),transparent);
+  animation: openingLoader 1.6s ease-in-out infinite;
+}
+
+.opening-photo__art {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  opacity: 0;
+  user-select: none;
+  -webkit-user-drag: none;
+  transform-origin: 50% 64%;
+  backface-visibility: hidden;
+  will-change: opacity,transform,filter;
+}
+.opening-photo__art--closed {
+  z-index: 3;
+  transform: scale(1.008);
+}
+.opening-photo__art--open {
+  z-index: 4;
+  transform: scale(.982);
+  filter: brightness(.74) saturate(.88) blur(1.4px);
+}
+.opening--photo.artwork-ready .opening-photo__loading { opacity: 0; pointer-events: none; }
+.opening--photo.artwork-ready .opening-photo__art--closed {
+  opacity: 1;
+  animation: openingStillBreath 7.5s ease-in-out infinite alternate;
+}
+.opening--photo.artwork-ready .opening-photo__trigger { opacity: 1; pointer-events: auto; }
+
+.opening-photo__trigger {
+  position: absolute;
+  z-index: 12;
+  left: 50%;
+  top: 83.2%;
+  width: 52%;
+  height: 8.3%;
+  min-height: 48px;
+  transform: translate(-50%,-50%);
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: transparent;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .5s ease, transform .15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.opening-photo__trigger:disabled { cursor: default; }
+.opening-photo__trigger::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  border: 1px solid transparent;
+  box-shadow: 0 0 0 rgba(228,177,94,0);
+  transition: border-color .25s ease,box-shadow .25s ease;
+}
+.opening-photo__trigger:focus-visible::before {
+  border-color: rgba(255,226,169,.82);
+  box-shadow: 0 0 0 4px rgba(216,163,84,.12),0 0 28px rgba(234,174,83,.28);
+}
+.opening-photo__trigger:active { transform: translate(-50%,-50%) scale(.985); }
+
+.opening-photo__status {
+  position: absolute;
+  z-index: 13;
+  bottom: max(calc(var(--safe-bottom) + 12px), 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  color: rgba(224,202,163,.42);
+  font: italic 10px/1.4 Georgia,serif;
+  letter-spacing: .08em;
+  transition: opacity .5s ease;
+}
+.opening--photo.artwork-ready .opening-photo__status { opacity: 0; }
+
+.opening-photo__aura,
+.opening-photo__horizon,
+.opening-photo__sweep,
+.opening-photo__ray {
+  position: absolute;
+  z-index: 7;
+  pointer-events: none;
+  opacity: 0;
+}
+.opening-photo__aura {
+  left: 50%;
+  top: 64.5%;
+  width: 18%;
+  aspect-ratio: 1;
+  transform: translate(-50%,-50%) scale(.2);
+  border-radius: 50%;
+  background: radial-gradient(circle,rgba(255,248,217,.98) 0%,rgba(247,202,122,.63) 19%,rgba(223,148,57,.22) 46%,transparent 72%);
+  filter: blur(2px);
+  mix-blend-mode: screen;
+}
+.opening-photo__horizon {
+  left: 50%;
+  top: 64.5%;
+  width: 78%;
+  height: 2px;
+  transform: translate(-50%,-50%) scaleX(.06);
+  background: linear-gradient(90deg,transparent,rgba(238,185,94,.15),#fff7d9,rgba(238,185,94,.15),transparent);
+  box-shadow: 0 0 18px rgba(255,214,142,.82),0 0 44px rgba(224,143,50,.28);
+  mix-blend-mode: screen;
+}
+.opening-photo__sweep {
+  top: -14%;
+  bottom: -14%;
+  left: -36%;
+  width: 22%;
+  transform: skewX(-13deg);
+  background: linear-gradient(90deg,transparent,rgba(255,242,205,.04),rgba(255,249,225,.5),rgba(255,224,164,.08),transparent);
+  filter: blur(5px);
+  mix-blend-mode: screen;
+}
+.opening-photo__ray {
+  left: 50%;
+  top: 64.5%;
+  width: 58%;
+  height: 32%;
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg,rgba(255,220,151,.18),transparent 72%);
+  filter: blur(8px);
+  mix-blend-mode: screen;
+}
+.opening-photo__ray--a { transform: rotate(-24deg) scaleX(.2); }
+.opening-photo__ray--b { transform: rotate(204deg) scaleX(.2); }
+
+.opening-photo__particles {
+  z-index: 10;
+  left: 50%;
+  top: 64.5%;
+}
+.opening--photo .particle {
+  background: radial-gradient(circle,#fff9df 0%,#f3cc84 42%,rgba(211,144,52,.5) 66%,transparent 72%);
+  box-shadow: 0 0 11px rgba(255,215,143,.65);
+}
+
+/* Click choreography */
+.opening--photo.is-opening .opening-photo__trigger { pointer-events: none; }
+.opening--photo.is-opening .opening-photo__art--closed {
+  animation: openingClosedOut 1.55s cubic-bezier(.17,.73,.22,1) forwards;
+}
+.opening--photo.is-opening .opening-photo__art--open {
+  animation: openingOpenIn 2.15s .28s cubic-bezier(.16,.86,.18,1) forwards;
+}
+.opening--photo.is-opening .opening-photo__aura {
+  animation: openingAura 1.72s .18s cubic-bezier(.16,.72,.2,1) forwards;
+}
+.opening--photo.is-opening .opening-photo__horizon {
+  animation: openingHorizon 1.28s .31s cubic-bezier(.2,.72,.2,1) forwards;
+}
+.opening--photo.is-opening .opening-photo__sweep {
+  animation: openingSweep 1.8s .69s cubic-bezier(.18,.76,.2,1) forwards;
+}
+.opening--photo.is-opening .opening-photo__ray--a {
+  animation: openingRayA 1.8s .34s ease-out forwards;
+}
+.opening--photo.is-opening .opening-photo__ray--b {
+  animation: openingRayB 1.8s .42s ease-out forwards;
+}
+
+@keyframes openingLoader {
+  0%,100% { transform:scaleX(.35); opacity:.35; }
+  50% { transform:scaleX(1); opacity:.9; }
+}
+@keyframes openingStillBreath {
+  from { transform:scale(1.004); filter:brightness(.99) saturate(.98); }
+  to { transform:scale(1.018); filter:brightness(1.015) saturate(1.015); }
+}
+@keyframes openingClosedOut {
+  0% { opacity:1; transform:scale(1.008); filter:brightness(1) saturate(1) blur(0); }
+  30% { opacity:1; transform:scale(1.018); filter:brightness(1.06) saturate(1.02) blur(0); }
+  68% { opacity:.32; transform:scale(1.052); filter:brightness(1.24) saturate(.86) blur(2px); }
+  100% { opacity:0; transform:scale(1.082); filter:brightness(1.4) saturate(.7) blur(5px); }
+}
+@keyframes openingOpenIn {
+  0% { opacity:0; transform:scale(.982); filter:brightness(.72) saturate(.84) blur(2px); }
+  16% { opacity:.18; }
+  55% { opacity:1; transform:scale(1.012); filter:brightness(1.12) saturate(1.05) blur(0); }
+  100% { opacity:1; transform:scale(1); filter:brightness(1) saturate(1) blur(0); }
+}
+@keyframes openingAura {
+  0% { opacity:0; transform:translate(-50%,-50%) scale(.16); }
+  23% { opacity:1; }
+  58% { opacity:.58; transform:translate(-50%,-50%) scale(3.15); }
+  100% { opacity:0; transform:translate(-50%,-50%) scale(5.5); }
+}
+@keyframes openingHorizon {
+  0% { opacity:0; transform:translate(-50%,-50%) scaleX(.05); }
+  25% { opacity:1; }
+  64% { opacity:.62; transform:translate(-50%,-50%) scaleX(1); }
+  100% { opacity:0; transform:translate(-50%,-50%) scaleX(1.22); }
+}
+@keyframes openingSweep {
+  0% { opacity:0; left:-36%; }
+  18% { opacity:.76; }
+  100% { opacity:0; left:122%; }
+}
+@keyframes openingRayA {
+  0% { opacity:0; transform:rotate(-24deg) scaleX(.12); }
+  34% { opacity:.5; }
+  100% { opacity:0; transform:rotate(-24deg) scaleX(1.2); }
+}
+@keyframes openingRayB {
+  0% { opacity:0; transform:rotate(204deg) scaleX(.12); }
+  34% { opacity:.42; }
+  100% { opacity:0; transform:rotate(204deg) scaleX(1.12); }
+}
+
+@media (min-width: 700px) {
+  .opening-photo__frame { max-width: 580px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .opening--photo.artwork-ready .opening-photo__art--closed { animation:none; }
+  .opening--photo.is-opening .opening-photo__art--closed { animation:openingClosedOut .45s ease forwards; }
+  .opening--photo.is-opening .opening-photo__art--open { animation:openingOpenIn .55s .1s ease forwards; }
+  .opening--photo.is-opening .opening-photo__aura,
+  .opening--photo.is-opening .opening-photo__horizon,
+  .opening--photo.is-opening .opening-photo__sweep,
+  .opening--photo.is-opening .opening-photo__ray { display:none; }
+}
