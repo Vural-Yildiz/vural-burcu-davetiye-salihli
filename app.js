@@ -83,8 +83,8 @@ function openInvitation() {
   opening.classList.add('is-opening');
   startMusicFromGesture();
 
-  timers.push(setTimeout(showInvitation, 4920));
-  timers.push(setTimeout(() => opening.classList.add('is-complete'), 5360));
+  timers.push(setTimeout(showInvitation, 6900));
+  timers.push(setTimeout(() => opening.classList.add('is-complete'), 7480));
 }
 
 function replayInvitation() {
