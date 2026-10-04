@@ -1,0 +1,33 @@
+name: Import A Thousand Years invitation edit
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/import-thousand-years.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download approved wedding edit
+        run: |
+          curl -fL --retry 3 --retry-delay 2 'https://d2jqrm6oza8nb6.cloudfront.net/datasets/1c0ba51d-707a-4738-a3e7-68de5361ed09.mp4?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiNjllYWRjMTFkOTViYjg3YiIsImJ1Y2tldCI6InJ1bndheS1kYXRhc2V0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc5MTI1NTQ0MX0.AQI4vYOemvcgpbJwdx5gApQ_p0XKZ9CbP0fiS7FZoUc' -o thousand-years-transfer.mp4
+          test -s thousand-years-transfer.mp4
+      - name: Extract invitation audio
+        run: |
+          ffmpeg -y -i thousand-years-transfer.mp4 -vn -c:a copy videoplayback.m4a
+          test -s videoplayback.m4a
+          ffprobe -v error -show_entries format=duration,size -of default=nw=1 videoplayback.m4a
+      - name: Commit invitation music
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add videoplayback.m4a
+          git diff --cached --quiet && exit 0
+          git commit -m "Use A Thousand Years wedding edit"
+          git push
