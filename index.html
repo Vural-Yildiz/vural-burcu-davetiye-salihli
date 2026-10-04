@@ -27,28 +27,34 @@
   </div>
 
   <main class="experience" id="experience">
-    <section class="opening opening--photo" id="opening" aria-label="Davet açılışı">
-      <div class="opening-photo" aria-hidden="true">
-        <div class="opening-photo__frame">
-          <div class="opening-photo__loading">
-            <span class="opening-photo__loading-mark">B<span>/</span>V</span>
-            <span class="opening-photo__loading-line"></span>
+    <section class="opening opening--atelier" id="opening" aria-label="Sinematik davet açılışı">
+      <div class="atelier-shell">
+        <div class="atelier-frame" id="atelierFrame" aria-hidden="true">
+          <div class="atelier-loading">
+            <span class="atelier-loading__mark">B<span>/</span>V</span>
+            <span class="atelier-loading__line"></span>
           </div>
-          <img class="opening-photo__art opening-photo__art--closed" id="openingClosedArtwork" src="opening-closed.webp" alt="" decoding="async" fetchpriority="high" />
-          <img class="opening-photo__art opening-photo__art--open" id="openingOpenArtwork" src="opening-open.webp" alt="" decoding="async" />
-          <span class="opening-photo__aura"></span>
-          <span class="opening-photo__horizon"></span>
-          <span class="opening-photo__sweep"></span>
-          <span class="opening-photo__ray opening-photo__ray--a"></span>
-          <span class="opening-photo__ray opening-photo__ray--b"></span>
-          <div class="particles opening-photo__particles" id="particles"></div>
-          <button class="opening-photo__trigger" id="openInvitation" type="button" aria-controls="invitation" aria-label="Daveti aç" disabled>
+
+          <img class="atelier-art atelier-art--closed" id="openingClosedArtwork" src="opening-closed.webp" alt="" decoding="async" fetchpriority="high" />
+          <img class="atelier-art atelier-art--open" id="openingOpenArtwork" src="opening-open.webp" alt="" decoding="async" />
+
+          <span class="atelier-seal-glow"></span>
+          <span class="atelier-seam atelier-seam--vertical"></span>
+          <span class="atelier-seam atelier-seam--horizontal"></span>
+          <span class="atelier-flare atelier-flare--a"></span>
+          <span class="atelier-flare atelier-flare--b"></span>
+          <span class="atelier-lens"></span>
+          <span class="atelier-veil"></span>
+
+          <div class="atelier-particles" id="particles"></div>
+
+          <button class="atelier-trigger" id="openInvitation" type="button" aria-controls="invitation" aria-label="Daveti aç" disabled>
             <span class="sr-only">Daveti aç</span>
           </button>
         </div>
       </div>
 
-      <p class="opening-photo__status" id="openingAssetStatus" aria-live="polite">Davet hazırlanıyor…</p>
+      <p class="atelier-status" id="openingAssetStatus" aria-live="polite">Davet hazırlanıyor…</p>
     </section>
 
     <section class="invitation" id="invitation" aria-hidden="true">
