@@ -14,6 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
       - name: Download approved wedding edit
         run: |
           curl -fL --retry 3 --retry-delay 2 'https://d2jqrm6oza8nb6.cloudfront.net/datasets/1c0ba51d-707a-4738-a3e7-68de5361ed09.mp4?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiNjllYWRjMTFkOTViYjg3YiIsImJ1Y2tldCI6InJ1bndheS1kYXRhc2V0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc5MTI1NTQ0MX0.AQI4vYOemvcgpbJwdx5gApQ_p0XKZ9CbP0fiS7FZoUc' -o thousand-years-transfer.mp4
