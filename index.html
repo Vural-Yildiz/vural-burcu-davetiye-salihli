@@ -8,11 +8,13 @@
   <meta name="description" content="Burcu & Vural — 7 Kasım 2026, 14:00–17:00, Salihli Öğretmenevi" />
   <meta property="og:title" content="Burcu & Vural — Düğün Daveti" />
   <meta property="og:description" content="7 Kasım 2026 · 14:00–17:00 · Salihli Öğretmenevi" />
-  <meta property="og:image" content="invitation-final.png" />
+  <meta property="og:image" content="opening-closed.webp" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
   <title>Burcu & Vural — Salihli Düğün Daveti</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preload" as="image" href="opening-closed.webp" type="image/webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="opening-open.webp" type="image/webp" />
   <link rel="preload" as="image" href="invitation-final.png" type="image/png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -32,8 +34,8 @@
             <span class="opening-photo__loading-mark">B<span>/</span>V</span>
             <span class="opening-photo__loading-line"></span>
           </div>
-          <img class="opening-photo__art opening-photo__art--closed" id="openingClosedArtwork" alt="" />
-          <img class="opening-photo__art opening-photo__art--open" id="openingOpenArtwork" alt="" />
+          <img class="opening-photo__art opening-photo__art--closed" id="openingClosedArtwork" src="opening-closed.webp" alt="" decoding="async" fetchpriority="high" />
+          <img class="opening-photo__art opening-photo__art--open" id="openingOpenArtwork" src="opening-open.webp" alt="" decoding="async" />
           <span class="opening-photo__aura"></span>
           <span class="opening-photo__horizon"></span>
           <span class="opening-photo__sweep"></span>
