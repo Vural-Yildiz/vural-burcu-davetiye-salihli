@@ -1,4 +1,4 @@
-name: Build opening artwork files
+name: Clean opening build files
 
 on:
   push:
@@ -11,49 +11,18 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  clean:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Rebuild the two approved opening artworks
+      - name: Remove one-time transfer data
         run: |
-          python - <<'PY'
-          from pathlib import Path
-          import base64, codecs
-
-          def decode_segment(path):
-              raw = Path(path).read_text(encoding='utf-8')
-              if raw.startswith('HEX\n'):
-                  body = ''.join(raw.splitlines()[1:]).replace(' ', '')
-                  return bytes.fromhex(body).decode('ascii')
-              if raw.startswith('ROTREV\n'):
-                  encoded = ''.join(raw.splitlines()[1:])
-                  return codecs.decode(encoded, 'rot_13')[::-1]
-              joined = ''.join(
-                  line[2:] if line.startswith('z:') else line
-                  for line in raw.splitlines() if line
-              )
-              return joined[::-1]
-
-          for kind in ('closed', 'open'):
-              chunks = [
-                  decode_segment(f'assets/opening/{kind}_{i:02d}.txt')
-                  for i in range(8)
-              ]
-              payload = base64.b64decode(''.join(chunks))
-              out = Path(f'opening-{kind}.webp')
-              out.write_bytes(payload)
-              if len(payload) < 120000 or payload[:4] != b'RIFF':
-                  raise SystemExit(f'Invalid {kind} artwork')
-              print(kind, len(payload))
-          PY
-
-      - name: Commit rebuilt artwork files
-        run: |
+          rm -rf assets/opening
+          rm -f .github/workflows/build-opening-artworks.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add opening-closed.webp opening-open.webp
+          git add -A
           git diff --cached --quiet && exit 0
-          git commit -m "Build approved cinematic opening artwork files"
+          git commit -m "Clean temporary opening artwork build files"
           git push
