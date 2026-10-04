@@ -3,8 +3,7 @@ const CONFIG = {
   eventEnd: '2026-11-07T17:00:00+03:00',
   venue: 'Salihli Öğretmenevi',
   mapsQuery: 'Salihli Öğretmenevi ve Akşam Sanat Okulu, Aksoy Mahallesi Menderes Caddesi No:70, Salihli, Manisa',
-  musicSrc: 'videoplayback.m4a',
-  filmHoldAt: 3.18
+  musicSrc: 'videoplayback.m4a'
 };
 
 const $ = (s) => document.querySelector(s);
@@ -18,76 +17,27 @@ const rsvpModal = $('#rsvpModal');
 const cinematicIntro = $('#cinematicIntro');
 
 let timers = [];
-let preludeRAF = 0;
 let filmStarted = false;
 let filmFinishing = false;
 
 function clearTimers() {
   timers.forEach(clearTimeout);
   timers = [];
-  if (preludeRAF) cancelAnimationFrame(preludeRAF);
-  preludeRAF = 0;
 }
 
-function waitForVideo(video) {
-  if (video.readyState >= 2) return Promise.resolve();
-  return new Promise((resolve, reject) => {
-    const onReady = () => {
-      cleanup();
-      resolve();
-    };
-    const onError = () => {
-      cleanup();
-      reject(new Error('video-load'));
-    };
-    const cleanup = () => {
-      video.removeEventListener('loadeddata', onReady);
-      video.removeEventListener('canplay', onReady);
-      video.removeEventListener('error', onError);
-    };
-    video.addEventListener('loadeddata', onReady, { once: true });
-    video.addEventListener('canplay', onReady, { once: true });
-    video.addEventListener('error', onError, { once: true });
-  });
-}
-
-function showTapMoment() {
-  cinematicIntro.pause();
-  try { cinematicIntro.currentTime = CONFIG.filmHoldAt; } catch (_) {}
-  opening.classList.add('is-awaiting-tap');
-  openButton.hidden = false;
-}
-
-async function playPrelude() {
+function prepareFilm() {
   clearTimers();
   filmStarted = false;
   filmFinishing = false;
-  opening.classList.remove('is-opening','is-film-ending','is-complete','is-awaiting-tap');
-  openButton.hidden = true;
 
-  try {
-    await waitForVideo(cinematicIntro);
-    opening.classList.add('film-ready');
-    cinematicIntro.muted = true;
-    cinematicIntro.playbackRate = 1;
-    cinematicIntro.currentTime = 0;
+  cinematicIntro.pause();
+  cinematicIntro.muted = true;
+  cinematicIntro.playbackRate = 1;
+  try { cinematicIntro.currentTime = 0; } catch (_) {}
 
-    const playPromise = cinematicIntro.play();
-    if (playPromise) await playPromise;
-
-    const watch = () => {
-      if (cinematicIntro.currentTime >= CONFIG.filmHoldAt - 0.035) {
-        showTapMoment();
-        return;
-      }
-      preludeRAF = requestAnimationFrame(watch);
-    };
-    preludeRAF = requestAnimationFrame(watch);
-  } catch (_) {
-    opening.classList.add('film-ready');
-    try { cinematicIntro.currentTime = CONFIG.filmHoldAt; } catch (_) {}
-    showTapMoment();
-  }
+  opening.classList.remove('is-opening','is-film-ending','is-complete');
+  opening.classList.add('film-ready','is-awaiting-tap');
+  openButton.hidden = false;
 }
 
 async function startMusicFromGesture() {
@@ -99,6 +49,7 @@ async function startMusicFromGesture() {
     music.currentTime = 0;
     music.volume = 0;
     await music.play();
+
     soundToggle.hidden = false;
     soundToggle.classList.remove('is-muted');
 
@@ -123,11 +74,13 @@ function showInvitation() {
 function finishFilm() {
   if (filmFinishing) return;
   filmFinishing = true;
+
   opening.classList.add('is-film-ending');
   showInvitation();
+
   timers.push(setTimeout(() => {
     opening.classList.add('is-complete');
-  }, 470));
+  }, 520));
 }
 
 async function openInvitation() {
@@ -142,21 +95,30 @@ async function openInvitation() {
   startMusicFromGesture();
 
   try {
+    cinematicIntro.pause();
     cinematicIntro.muted = true;
-    if (cinematicIntro.currentTime < CONFIG.filmHoldAt - .12) {
-      cinematicIntro.currentTime = CONFIG.filmHoldAt;
-    }
-    await cinematicIntro.play();
-  } catch (_) {
-    finishFilm();
-    return;
-  }
+    cinematicIntro.playbackRate = 1;
+    cinematicIntro.currentTime = 0;
 
-  const remaining = Math.max(0, (cinematicIntro.duration || 9.33) - cinematicIntro.currentTime);
-  timers.push(setTimeout(finishFilm, Math.max(900, remaining * 1000 - 140)));
+    const playPromise = cinematicIntro.play();
+    if (playPromise) await playPromise;
+
+    const duration = Number.isFinite(cinematicIntro.duration) && cinematicIntro.duration > 0
+      ? cinematicIntro.duration
+      : 9.34;
+
+    timers.push(setTimeout(finishFilm, Math.max(1200, duration * 1000 - 100)));
+  } catch (_) {
+    // Some in-app browsers can still refuse inline video.
+    // Never leave the guest trapped on the opening screen.
+    timers.push(setTimeout(finishFilm, 650));
+  }
 }
 
 cinematicIntro.addEventListener('ended', finishFilm);
+cinematicIntro.addEventListener('error', () => {
+  if (filmStarted) finishFilm();
+});
 
 function replayInvitation() {
   clearTimers();
@@ -168,16 +130,17 @@ function replayInvitation() {
   try { music.currentTime = 0; } catch (_) {}
   soundToggle.classList.add('is-muted');
 
-  opening.classList.add('restarting');
-  opening.classList.remove('is-complete','is-opening','is-film-ending','is-awaiting-tap');
   cinematicIntro.pause();
   try { cinematicIntro.currentTime = 0; } catch (_) {}
+
+  opening.classList.add('restarting');
+  opening.classList.remove('is-complete','is-opening','is-film-ending','is-awaiting-tap');
 
   void opening.offsetHeight;
   opening.classList.remove('restarting');
 
   window.scrollTo({top:0,behavior:'auto'});
-  playPrelude();
+  prepareFilm();
 }
 
 function updateCountdown() {
@@ -197,6 +160,7 @@ function updateCountdown() {
 
   const days = Math.floor(diff / 86400000);
   const hours = Math.floor((diff % 86400000) / 3600000);
+
   if (days >= 2) el.textContent = `${days} gün kaldı`;
   else if (days === 1) el.textContent = `1 gün ${hours} saat kaldı`;
   else el.textContent = `${hours} saat kaldı`;
@@ -207,6 +171,7 @@ replayButton.addEventListener('click', replayInvitation);
 
 soundToggle.addEventListener('click', async () => {
   if (!music.src) return;
+
   if (music.paused) {
     await music.play().catch(() => {});
     soundToggle.classList.remove('is-muted');
@@ -254,14 +219,6 @@ window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !rsvpModal.hidden) closeRSVP();
 });
 
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden && !cinematicIntro.paused && !filmStarted) {
-    cinematicIntro.pause();
-  } else if (!document.hidden && !filmStarted && !opening.classList.contains('is-awaiting-tap')) {
-    playPrelude();
-  }
-});
-
 updateCountdown();
 setInterval(updateCountdown, 60000);
-playPrelude();
+prepareFilm();
