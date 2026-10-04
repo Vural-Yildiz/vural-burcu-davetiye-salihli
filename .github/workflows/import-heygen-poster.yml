@@ -1,0 +1,31 @@
+name: Import HeyGen poster
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/import-heygen-poster.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download poster
+        env:
+          POSTER_URL: 'https://files2.heygen.ai/aws_pacific/avatar_tmp/9205b3b7dce04d94885bf013c4f048d1/vc3c90ccbbc5c4e32b496b099c8541cfe/6a049c8097af47b1b10769dafde70e73.jpeg?Expires=1791744265&Signature=lwRjkyWT6eHeHaew9HAVQvh3s0sKqleSDK1qtTJG6Uckadjvn6-c5p9Z2JcVdQ~amo6mI0RFE06xMSpUTTAgS4VAChKVg-KPZHNXSFg19u~0ldUU9xirH7TjC2x4Q2ioLBLYBEeOBg1idIkjp3iew05S00BVTlA72CEBh-YCca64x2lAC~80o0j75Q8knPocxj8OWi7sR6I9wzONtltiB7y5qfVzSiBsI2QIUcpv37e0RBgwiLZy0MhS~i1nYmC-tIO24DttBm7uQX57wVgDzz3JjF6EasARz4dGvZ8ag6KTY~O6w2fBN9G4GQZa39yevdg-PskjDmtiKYSlo8sS2w__&Key-Pair-Id=K38HBHX5LX3X2H'
+        run: |
+          curl -L --fail --retry 3 --retry-delay 2 "$POSTER_URL" -o cinematic-opening-poster.jpg
+          test -s cinematic-opening-poster.jpg
+          test "$(wc -c < cinematic-opening-poster.jpg)" -gt 10000
+      - name: Commit and clean workflow
+        run: |
+          rm -f .github/workflows/import-heygen-poster.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Add HeyGen cinematic poster"
+          git push
