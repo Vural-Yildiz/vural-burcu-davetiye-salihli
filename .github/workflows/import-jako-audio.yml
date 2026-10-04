@@ -18,7 +18,7 @@ jobs:
         run: |
           base64 -d .tmp-jako-audio.b64 > videoplayback.m4a
           test -s videoplayback.m4a
-          ffprobe -v error -show_entries format=duration,size -of default=nw=1 videoplayback.m4a
+          test $(wc -c < videoplayback.m4a) -gt 400000
       - name: Commit approved invitation music
         run: |
           git config user.name "github-actions[bot]"
