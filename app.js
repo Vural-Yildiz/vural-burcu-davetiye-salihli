@@ -15,7 +15,93 @@ const particles = $('#particles');
 const music = $('#music');
 const soundToggle = $('#soundToggle');
 const rsvpModal = $('#rsvpModal');
+const openingClosedArtwork = $('#openingClosedArtwork');
+const openingOpenArtwork = $('#openingOpenArtwork');
+const openingAssetStatus = $('#openingAssetStatus');
+let openingArtworkURLs = [];
 let timers = [];
+
+
+function rot13(value) {
+  return value.replace(/[A-Za-z]/g, (c) => {
+    const base = c <= 'Z' ? 65 : 97;
+    return String.fromCharCode(base + (c.charCodeAt(0) - base + 13) % 26);
+  });
+}
+
+function decodeArtworkChunk(raw) {
+  if (raw.startsWith('HEX\n')) {
+    const hex = raw.slice(4).replace(/\s/g, '');
+    let text = '';
+    for (let i = 0; i < hex.length; i += 2) {
+      text += String.fromCharCode(parseInt(hex.slice(i, i + 2), 16));
+    }
+    return text;
+  }
+
+  if (raw.startsWith('ROTREV\n')) {
+    const encoded = raw.slice(7).replace(/\s/g, '');
+    return Array.from(rot13(encoded)).reverse().join('');
+  }
+
+  const reversed = raw
+    .split(/\r?\n/)
+    .filter(Boolean)
+    .map((line) => line.startsWith('z:') ? line.slice(2) : line)
+    .join('');
+
+  return Array.from(reversed).reverse().join('');
+}
+
+function base64ToObjectURL(base64, type = 'image/webp') {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return URL.createObjectURL(new Blob([bytes], { type }));
+}
+
+async function loadOpeningArtwork(kind) {
+  const paths = Array.from({length: 8}, (_, i) =>
+    `assets/opening/${kind}_${String(i).padStart(2,'0')}.txt`
+  );
+  const payloads = await Promise.all(paths.map(async (path) => {
+    const response = await fetch(path, { cache: 'force-cache' });
+    if (!response.ok) throw new Error(`Artwork load failed: ${path}`);
+    return response.text();
+  }));
+  const base64 = payloads.map(decodeArtworkChunk).join('');
+  return base64ToObjectURL(base64);
+}
+
+function waitForImage(img) {
+  if (img.complete && img.naturalWidth) return Promise.resolve();
+  return new Promise((resolve, reject) => {
+    img.addEventListener('load', resolve, { once: true });
+    img.addEventListener('error', reject, { once: true });
+  });
+}
+
+async function hydrateOpeningArtwork() {
+  try {
+    const [closedURL, openURL] = await Promise.all([
+      loadOpeningArtwork('closed'),
+      loadOpeningArtwork('open')
+    ]);
+    openingArtworkURLs = [closedURL, openURL];
+    openingClosedArtwork.src = closedURL;
+    openingOpenArtwork.src = openURL;
+    await Promise.all([
+      waitForImage(openingClosedArtwork),
+      waitForImage(openingOpenArtwork)
+    ]);
+    opening.classList.add('artwork-ready');
+    openButton.disabled = false;
+    openingAssetStatus.textContent = '';
+  } catch (_) {
+    openingAssetStatus.textContent = 'Daveti açmak için dokunun.';
+    openButton.disabled = false;
+  }
+}
 
 function clearTimers() {
   timers.forEach(clearTimeout);
@@ -73,8 +159,8 @@ function openInvitation() {
   opening.classList.add('is-opening');
   startMusicFromGesture();
 
-  timers.push(setTimeout(showInvitation, 3650));
-  timers.push(setTimeout(() => opening.classList.add('is-complete'), 4380));
+  timers.push(setTimeout(showInvitation, 2850));
+  timers.push(setTimeout(() => opening.classList.add('is-complete'), 3460));
 }
 
 function replayInvitation() {
@@ -155,5 +241,6 @@ window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !rsvpModal.hidden) closeRSVP();
 });
 
+hydrateOpeningArtwork();
 updateCountdown();
 setInterval(updateCountdown, 60000);
