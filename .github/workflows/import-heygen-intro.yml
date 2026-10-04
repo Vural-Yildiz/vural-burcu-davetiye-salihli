@@ -23,12 +23,6 @@ jobs:
           curl -L --fail --retry 3 --retry-delay 2 "$HEYGEN_URL" -o cinematic-opening.mp4
           test -s cinematic-opening.mp4
           test "$(wc -c < cinematic-opening.mp4)" -gt 500000
-          ffprobe -v error -show_entries format=duration,size -of default=nw=1 cinematic-opening.mp4
-
-      - name: Create crisp poster frame
-        run: |
-          ffmpeg -y -ss 3.05 -i cinematic-opening.mp4 -frames:v 1 -q:v 2 cinematic-opening-poster.jpg
-          test -s cinematic-opening-poster.jpg
 
       - name: Commit intro and clean transfer workflow
         run: |
