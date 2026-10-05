@@ -16,7 +16,7 @@
   <link rel="preload" as="image" href="assets/scene-01.webp" type="image/webp" fetchpriority="high" />
   <link rel="preload" as="image" href="assets/scene-03.webp" type="image/webp" />
   <link rel="preload" as="image" href="invitation-final.png" type="image/png" />
-  <link rel="stylesheet" href="styles.css?v=20261005" />
+  <link rel="stylesheet" href="styles.css?v=20261005-video1" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true">
@@ -38,15 +38,16 @@
         <img class="scene" data-scene="7" src="assets/scene-07.webp" alt="" decoding="async" />
         <img class="scene" data-scene="8" src="assets/scene-08.webp" alt="" decoding="async" />
         <img class="scene" data-scene="9" src="assets/scene-09.webp" alt="" decoding="async" />
+        <img class="scene" data-scene="10" src="assets/scene-10.webp" alt="" decoding="async" />
+        <video class="intro-video" id="introVideo" muted playsinline preload="none" poster="assets/scene-01.webp" tabindex="-1"></video>
         <div class="door-leaf door-leaf--left"></div><div class="door-leaf door-leaf--right"></div>
         <div class="cinema__light"></div><div class="cinema__vignette"></div><div class="cinema__dust" id="particles"></div>
       </div>
-      <div class="cinema__heading"><p>MANİSA · SALİHLİ</p><span>Bir ömürlük hikâyenin başlangıcı</span></div>
-      <div class="cinema__controls">
-        <p class="cinema__names">Burcu <em>&amp;</em> Vural</p>
-        <button class="open-button" id="openInvitation" type="button" aria-controls="invitation"><span>Daveti aç</span><span aria-hidden="true">↗</span></button>
-        <p class="cinema__date">7 KASIM 2026</p>
+      <div class="cinema__controls" hidden>
+        <button class="open-button" id="openInvitation" type="button" aria-controls="invitation" aria-label="Daveti aç"><span class="sr-only">Daveti aç</span></button>
       </div>
+      <button class="intro-resume" id="resumeIntro" type="button" hidden>Açılışı oynat</button>
+      <button class="intro-sound" id="introSound" type="button" aria-pressed="false" hidden>Sesi aç</button>
       <p class="cinema__status sr-only" id="openingAssetStatus" aria-live="polite">Davet hazırlanıyor.</p>
       <button class="skip" id="skipIntro" type="button">Açılışı geç</button>
     </section>
@@ -110,7 +111,8 @@
   </div>
 
   <audio id="music" preload="none"></audio>
-  <script src="app.js?v=20261005" defer></script>
+  <script src="intro-config.js?v=20261005-video1"></script>
+  <script src="app.js?v=20261005-video1" defer></script>
 <noscript><style>.cinema{display:none}.invitation{opacity:1;visibility:visible;display:block;transform:none}</style><p>7 Kasım 2026 · 14:00–17:00 · Salihli Öğretmenevi. <a href="invitation-final.png">Davetiye</a> · <a href="burcu-vural-salihli-dugun.ics">Takvime ekle</a></p></noscript>
 </body>
 </html>
