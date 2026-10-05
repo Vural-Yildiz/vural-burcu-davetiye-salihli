@@ -8,15 +8,15 @@
   <meta name="description" content="Burcu & Vural — 7 Kasım 2026, 14:00–17:00, Salihli Öğretmenevi" />
   <meta property="og:title" content="Burcu & Vural — Düğün Daveti" />
   <meta property="og:description" content="7 Kasım 2026 · 14:00–17:00 · Salihli Öğretmenevi" />
-  <meta property="og:image" content="opening-closed.webp" />
+  <meta property="og:image" content="https://vural-yildiz.github.io/vural-burcu-davetiye-salihli/assets/scene-03.webp" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
   <title>Burcu & Vural — Salihli Düğün Daveti</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <link rel="preload" as="image" href="opening-closed.webp" type="image/webp" fetchpriority="high" />
-  <link rel="preload" as="image" href="opening-open.webp" type="image/webp" />
+  <link rel="preload" as="image" href="assets/scene-01.webp" type="image/webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="assets/scene-03.webp" type="image/webp" />
   <link rel="preload" as="image" href="invitation-final.png" type="image/png" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=20261005" />
 </head>
 <body>
   <div class="ambient" aria-hidden="true">
@@ -27,33 +27,34 @@
   </div>
 
   <main class="experience" id="experience">
-    <section class="opening opening--photo" id="opening" aria-label="Davet açılışı">
-      <div class="opening-photo" aria-hidden="true">
-        <div class="opening-photo__frame">
-          <div class="opening-photo__loading">
-            <span class="opening-photo__loading-mark">B<span>/</span>V</span>
-            <span class="opening-photo__loading-line"></span>
-          </div>
-          <img class="opening-photo__art opening-photo__art--closed" id="openingClosedArtwork" src="opening-closed.webp" alt="" decoding="async" fetchpriority="high" />
-          <img class="opening-photo__art opening-photo__art--open" id="openingOpenArtwork" src="opening-open.webp" alt="" decoding="async" />
-          <span class="opening-photo__aura"></span>
-          <span class="opening-photo__horizon"></span>
-          <span class="opening-photo__sweep"></span>
-          <span class="opening-photo__ray opening-photo__ray--a"></span>
-          <span class="opening-photo__ray opening-photo__ray--b"></span>
-          <div class="particles opening-photo__particles" id="particles"></div>
-          <button class="opening-photo__trigger" id="openInvitation" type="button" aria-controls="invitation" aria-label="Daveti aç" disabled>
-            <span class="sr-only">Daveti aç</span>
-          </button>
-        </div>
+    <section class="cinema" id="opening" aria-label="Davet açılışı">
+      <div class="cinema__stage" id="stage" aria-hidden="true">
+        <img class="scene active" data-scene="1" src="assets/scene-01.webp" alt="" decoding="async" />
+        <img class="scene" data-scene="2" src="assets/scene-02.webp" alt="" decoding="async" />
+        <img class="scene" data-scene="3" src="assets/scene-03.webp" alt="" decoding="async" />
+        <img class="scene" data-scene="4" src="assets/scene-04.webp" alt="" decoding="async" />
+        <img class="scene" data-scene="5" src="assets/scene-05.webp" alt="" decoding="async" />
+        <img class="scene" data-scene="6" src="assets/scene-06.webp" alt="" decoding="async" />
+        <img class="scene" data-scene="7" src="assets/scene-07.webp" alt="" decoding="async" />
+        <img class="scene" data-scene="8" src="assets/scene-08.webp" alt="" decoding="async" />
+        <img class="scene" data-scene="9" src="assets/scene-09.webp" alt="" decoding="async" />
+        <div class="door-leaf door-leaf--left"></div><div class="door-leaf door-leaf--right"></div>
+        <div class="cinema__light"></div><div class="cinema__vignette"></div><div class="cinema__dust" id="particles"></div>
       </div>
-
-      <p class="opening-photo__status" id="openingAssetStatus" aria-live="polite">Davet hazırlanıyor…</p>
+      <div class="cinema__heading"><p>MANİSA · SALİHLİ</p><span>Bir ömürlük hikâyenin başlangıcı</span></div>
+      <div class="cinema__controls">
+        <p class="cinema__names">Burcu <em>&amp;</em> Vural</p>
+        <button class="open-button" id="openInvitation" type="button" aria-controls="invitation"><span>Daveti aç</span><span aria-hidden="true">↗</span></button>
+        <p class="cinema__date">7 KASIM 2026</p>
+      </div>
+      <p class="cinema__status sr-only" id="openingAssetStatus" aria-live="polite">Davet hazırlanıyor.</p>
+      <button class="skip" id="skipIntro" type="button">Açılışı geç</button>
     </section>
 
-    <section class="invitation" id="invitation" aria-hidden="true">
+    <section class="invitation" id="invitation" aria-hidden="true" inert tabindex="-1">
       <div class="invitation__halo" aria-hidden="true"></div>
       <div class="invitation__wrap">
+        <header class="invite-heading"><p>SEVGİYLE DAVETLİSİNİZ</p><h1>Burcu <em>&amp;</em> Vural</h1><span>Bir ömürün en tatlı telaşındayız; şahidimiz olun.</span></header>
         <figure class="art-card" id="artCard">
           <img src="invitation-final.png" alt="Burcu ve Vural düğün davetiyesi. Mürüvvet & Ergül KÜÇ ve Herdem & Nurettin YILDIZ aileleri. 7 Kasım 2026 Cumartesi, 14:00–17:00, Salihli Öğretmenevi." />
 <div class="art-card__foil" aria-hidden="true"></div>
@@ -81,7 +82,7 @@
           </button>
           <button class="action" id="rsvpBtn" type="button">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v11H8l-4 4V6Z"/><path d="m8 11 2.2 2.2L16 8"/></svg>
-            <span>Katılım Onayı</span>
+            <span>Katılım Notum</span>
           </button>
         </nav>
 
@@ -98,8 +99,8 @@
     <div class="modal__panel">
       <button class="modal__close" id="rsvpClose" type="button" aria-label="Kapat">×</button>
       <p class="modal__eyebrow">7 KASIM 2026 · SALİHLİ</p>
-      <h2 id="rsvpTitle">Katılım Onayı</h2>
-      <p>Seçiminiz bu cihazda saklanır. İsterseniz sonraki aşamada WhatsApp veya form sistemine bağlayabiliriz.</p>
+      <h2 id="rsvpTitle">Katılım Notum</h2>
+      <p>Bu seçim yalnızca bu cihazda saklanır; ailelere katılım bildirimi göndermez.</p>
       <div class="modal__options">
         <button type="button" data-rsvp="Katılıyorum">Katılıyorum</button>
         <button type="button" data-rsvp="Katılamıyorum">Katılamıyorum</button>
@@ -109,6 +110,7 @@
   </div>
 
   <audio id="music" preload="none"></audio>
-  <script src="app.js" defer></script>
+  <script src="app.js?v=20261005" defer></script>
+<noscript><style>.cinema{display:none}.invitation{opacity:1;visibility:visible;display:block;transform:none}</style><p>7 Kasım 2026 · 14:00–17:00 · Salihli Öğretmenevi. <a href="invitation-final.png">Davetiye</a> · <a href="burcu-vural-salihli-dugun.ics">Takvime ekle</a></p></noscript>
 </body>
 </html>

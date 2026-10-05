@@ -1,187 +1,32 @@
-const CONFIG = {
-  eventStart: '2026-11-07T14:00:00+03:00',
-  eventEnd: '2026-11-07T17:00:00+03:00',
-  venue: 'Salihli Öğretmenevi',
-  mapsQuery: 'Salihli Öğretmenevi ve Akşam Sanat Okulu, Aksoy Mahallesi Menderes Caddesi No:70, Salihli, Manisa',
-  musicSrc: 'videoplayback.m4a' // Repo kökündeki müzik
-};
-
-const $ = (s) => document.querySelector(s);
-const opening = $('#opening');
-const invitation = $('#invitation');
-const openButton = $('#openInvitation');
-const replayButton = $('#replayBtn');
-const particles = $('#particles');
-const music = $('#music');
-const soundToggle = $('#soundToggle');
-const rsvpModal = $('#rsvpModal');
-const openingClosedArtwork = $('#openingClosedArtwork');
-const openingOpenArtwork = $('#openingOpenArtwork');
-const openingAssetStatus = $('#openingAssetStatus');
-let timers = [];
-
-
-function waitForImage(img) {
-  if (img.complete && img.naturalWidth) return Promise.resolve();
-  return new Promise((resolve, reject) => {
-    img.addEventListener('load', resolve, { once: true });
-    img.addEventListener('error', reject, { once: true });
-  });
+'use strict';
+const $ = s => document.querySelector(s);
+const opening=$('#opening'), invitation=$('#invitation'), button=$('#openInvitation'), music=$('#music');
+const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
+let timers=[], run=0, busy=false, finished=false;
+document.body.classList.add('intro-active');
+function later(fn,ms){const current=run;timers.push(setTimeout(()=>{if(current===run)fn();},ms));}
+function clear(){run++;timers.forEach(clearTimeout);timers=[];}
+function scene(n){document.querySelectorAll('.scene').forEach(el=>el.classList.toggle('active',Number(el.dataset.scene)===n));}
+function readyImage(img){return new Promise(resolve=>{if(img.complete)return resolve(img.naturalWidth>0);img.addEventListener('load',()=>resolve(true),{once:true});img.addEventListener('error',()=>resolve(false),{once:true});setTimeout(()=>resolve(false),8000);});}
+const imagesReady=Promise.all([...document.querySelectorAll('.scene')].map(readyImage));
+for(let i=0;i<24;i++){const p=document.createElement('i');p.className='mote';p.style.cssText=`--x:${(i*37)%100}%;--y:${(i*19)%100}%;--size:${1+i%3}px;--delay:${-i/3}s;--duration:${5+i%6}s`;$('#particles').append(p);}
+function idle(){clear();busy=false;finished=false;button.disabled=false;opening.className='cinema';invitation.classList.remove('is-visible');invitation.inert=true;invitation.setAttribute('aria-hidden','true');opening.inert=false;document.body.classList.add('intro-active');scene(reduced.matches?3:1);window.scrollTo(0,0);if(!reduced.matches){later(()=>scene(2),1500);later(()=>scene(3),3300);}}
+function finish(){if(finished)return;finished=true;clear();busy=false;opening.classList.add('complete');opening.inert=true;invitation.inert=false;invitation.setAttribute('aria-hidden','false');invitation.classList.add('is-visible');document.body.classList.remove('intro-active');$('#openingAssetStatus').textContent='Davetiye açıldı.';invitation.focus({preventScroll:true});}
+function playMusic(){if(!music.src)music.src='videoplayback.m4a';music.volume=.32;music.loop=true;music.play().then(()=>{$('#soundToggle').hidden=false;$('#soundToggle').textContent='♫ Müziği kapat';}).catch(()=>{});}
+async function open(){if(busy||finished)return;clear();busy=true;button.disabled=true;opening.classList.add('playing');const thisRun=run;playMusic();if(reduced.matches){finish();return;}$('#openingAssetStatus').textContent='Davetiye açılıyor.';await imagesReady;if(thisRun!==run||!busy||finished)return;
+ scene(4);opening.classList.add('bloom');later(()=>{scene(5);opening.classList.add('doors-ready');},1300);later(()=>opening.classList.add('doors-open'),1400);later(()=>opening.classList.remove('bloom'),2700);later(()=>{opening.classList.remove('doors-ready','doors-open');scene(6);},4200);later(()=>scene(7),6200);later(()=>{scene(8);opening.classList.add('bloom');},8100);later(()=>{scene(9);opening.classList.remove('bloom');},10100);later(finish,12300);
 }
-
-async function hydrateOpeningArtwork() {
-  try {
-    await Promise.all([
-      waitForImage(openingClosedArtwork),
-      waitForImage(openingOpenArtwork)
-    ]);
-    opening.classList.add('artwork-ready');
-    openButton.disabled = false;
-    openingAssetStatus.textContent = '';
-  } catch (_) {
-    openingAssetStatus.textContent = 'Daveti açmak için dokunun.';
-    openButton.disabled = false;
-  }
-}
-
-function clearTimers() {
-  timers.forEach(clearTimeout);
-  timers = [];
-}
-
-function buildParticles() {
-  particles.replaceChildren();
-  const spec = [
-    [-66,-42,2.1,.88,.20],[-51,18,1.4,.98,.24],[-39,-62,1.8,.94,.27],[-22,46,1.1,.86,.19],
-    [-8,-57,2.5,1.02,.23],[10,52,1.3,.90,.31],[21,-68,1.5,.98,.18],[36,38,2.0,.92,.26],
-    [53,-35,1.2,1.02,.21],[69,8,1.7,.88,.33],[7,-39,1.0,.96,.36],[-4,62,1.4,.91,.34]
-  ];
-  for (const [x,y,s,d,delay] of spec) {
-    const p = document.createElement('span');
-    p.className = 'particle';
-    p.style.setProperty('--x', `${x}px`);
-    p.style.setProperty('--y', `${y}px`);
-    p.style.setProperty('--s', `${s}px`);
-    p.style.setProperty('--d', `${d}s`);
-    p.style.setProperty('--delay', `${delay}s`);
-    particles.appendChild(p);
-  }
-}
-
-async function startMusicFromGesture() {
-  if (!CONFIG.musicSrc) return;
-  if (!music.src) music.src = CONFIG.musicSrc;
-  music.volume = 0;
-  try {
-    await music.play();
-    soundToggle.hidden = false;
-    const t0 = performance.now();
-    const duration = 1400;
-    const ramp = (t) => {
-      const p = Math.min(1,(t - t0) / duration);
-      music.volume = .58 * (1 - Math.pow(1 - p,3));
-      if (p < 1) requestAnimationFrame(ramp);
-    };
-    requestAnimationFrame(ramp);
-  } catch (_) {
-    soundToggle.hidden = true;
-  }
-}
-
-function showInvitation() {
-  invitation.classList.add('is-visible');
-  invitation.setAttribute('aria-hidden','false');
-}
-
-function openInvitation() {
-  if (opening.classList.contains('is-opening')) return;
-  clearTimers();
-  buildParticles();
-  opening.classList.add('is-opening');
-  startMusicFromGesture();
-
-  timers.push(setTimeout(showInvitation, 2850));
-  timers.push(setTimeout(() => opening.classList.add('is-complete'), 3460));
-}
-
-function replayInvitation() {
-  clearTimers();
-  invitation.classList.remove('is-visible');
-  invitation.setAttribute('aria-hidden','true');
-  opening.classList.add('restarting');
-  opening.classList.remove('is-complete','is-opening');
-  particles.replaceChildren();
-  void opening.offsetHeight;
-  opening.classList.remove('restarting');
-  void opening.offsetHeight;
-  window.scrollTo({top:0,behavior:'auto'});
-}
-
-function updateCountdown() {
-  const el = $('#countdown');
-  const now = new Date();
-  const start = new Date(CONFIG.eventStart);
-  const diff = start - now;
-  if (diff <= -3 * 60 * 60 * 1000) {
-    el.textContent = 'Bu güzel gün için teşekkür ederiz.';
-    return;
-  }
-  if (diff <= 0) {
-    el.textContent = 'Bugün buluşuyoruz.';
-    return;
-  }
-  const days = Math.floor(diff / 86400000);
-  const hours = Math.floor((diff % 86400000) / 3600000);
-  if (days >= 2) el.textContent = `${days} gün kaldı`;
-  else if (days === 1) el.textContent = `1 gün ${hours} saat kaldı`;
-  else el.textContent = `${hours} saat kaldı`;
-}
-
-openButton.addEventListener('click', openInvitation);
-replayButton.addEventListener('click', replayInvitation);
-
-soundToggle.addEventListener('click', async () => {
-  if (!music.src) return;
-  if (music.paused) {
-    await music.play().catch(() => {});
-    soundToggle.classList.remove('is-muted');
-  } else {
-    music.pause();
-    soundToggle.classList.add('is-muted');
-  }
-});
-
-$('#locationBtn').addEventListener('click', () => {
-  const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CONFIG.mapsQuery)}`;
-  window.open(url,'_blank','noopener,noreferrer');
-});
-
-$('#calendarBtn').addEventListener('click', () => {
-  window.location.href = 'burcu-vural-salihli-dugun.ics';
-});
-
-function openRSVP() {
-  const saved = localStorage.getItem('burcu-vural-salihli-rsvp');
-  $('#rsvpStatus').textContent = saved ? `Seçiminiz: ${saved}` : '';
-  rsvpModal.hidden = false;
-}
-function closeRSVP() { rsvpModal.hidden = true; }
-$('#rsvpBtn').addEventListener('click', openRSVP);
-$('#rsvpClose').addEventListener('click', closeRSVP);
-rsvpModal.addEventListener('click', (e) => {
-  if (e.target.matches('[data-close-rsvp]')) closeRSVP();
-});
-document.querySelectorAll('[data-rsvp]').forEach((btn) => {
-  btn.addEventListener('click', () => {
-    const value = btn.dataset.rsvp;
-    localStorage.setItem('burcu-vural-salihli-rsvp', value);
-    $('#rsvpStatus').textContent = `Seçiminiz kaydedildi: ${value}`;
-  });
-});
-window.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && !rsvpModal.hidden) closeRSVP();
-});
-
-hydrateOpeningArtwork();
-updateCountdown();
-setInterval(updateCountdown, 60000);
+button.addEventListener('click',open);$('#skipIntro').addEventListener('click',finish);$('#replayBtn').addEventListener('click',()=>{idle();button.focus({preventScroll:true});});
+$('#soundToggle').addEventListener('click',()=>{if(music.paused){music.play().then(()=>$('#soundToggle').textContent='♫ Müziği kapat').catch(()=>{});}else{music.pause();$('#soundToggle').textContent='♫ Müziği aç';}});
+$('#locationBtn').addEventListener('click',()=>window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('Salihli Öğretmenevi ve Akşam Sanat Okulu, Aksoy Mahallesi Menderes Caddesi No:70, Salihli, Manisa'),'_blank','noopener,noreferrer'));
+$('#calendarBtn').addEventListener('click',()=>{window.location.href='burcu-vural-salihli-dugun.ics';});
+function countdown(){const diff=new Date('2026-11-07T14:00:00+03:00')-Date.now();$('#countdown').textContent=diff<-10800000?'Bu güzel gün için teşekkür ederiz.':diff<=0?'Bugün buluşuyoruz.':Math.floor(diff/86400000)>0?`${Math.floor(diff/86400000)} gün kaldı`:`${Math.floor(diff/3600000)} saat kaldı`;}
+countdown();setInterval(countdown,60000);
+const modal=$('#rsvpModal');let lastFocus;
+function closeModal(){modal.hidden=true;invitation.inert=false;if(lastFocus)lastFocus.focus();}
+$('#rsvpBtn').addEventListener('click',()=>{lastFocus=document.activeElement;let saved='';try{saved=localStorage.getItem('burcu-vural-salihli-rsvp')||'';}catch{}$('#rsvpStatus').textContent=saved?`Bu cihazdaki seçiminiz: ${saved}`:'';modal.hidden=false;invitation.inert=true;$('#rsvpClose').focus();});
+$('#rsvpClose').addEventListener('click',closeModal);modal.addEventListener('click',e=>{if(e.target.matches('[data-close-rsvp]'))closeModal();});
+document.querySelectorAll('[data-rsvp]').forEach(b=>b.addEventListener('click',()=>{try{localStorage.setItem('burcu-vural-salihli-rsvp',b.dataset.rsvp);$('#rsvpStatus').textContent=`Bu cihazda kaydedildi: ${b.dataset.rsvp}`;}catch{$('#rsvpStatus').textContent='Tarayıcınız bu seçimin kaydedilmesine izin vermiyor.';}}));
+document.addEventListener('keydown',e=>{if(modal.hidden)return;if(e.key==='Escape')closeModal();if(e.key==='Tab'){const els=[...modal.querySelectorAll('button')];if(e.shiftKey&&document.activeElement===els[0]){e.preventDefault();els.at(-1).focus();}else if(!e.shiftKey&&document.activeElement===els.at(-1)){e.preventDefault();els[0].focus();}}});
+imagesReady.then(results=>{$('#openingAssetStatus').textContent=results.every(Boolean)?'Davet hazır.':'Davet hazır. Açılışı geçerek davetiyeye ulaşabilirsiniz.';});
+idle();
