@@ -12,3 +12,5 @@
 .intro-resume{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:7;background:#0e131de8;color:var(--cream);padding:18px 28px;border:1px solid var(--gold);border-radius:32px}
 .intro-sound{position:absolute;right:20px;top:max(16px,env(safe-area-inset-top));z-index:7;border:1px solid #e4bf7e55;border-radius:24px;background:#080c10b3;color:var(--cream);padding:10px 14px;font-size:12px}
 @supports not (height:100svh){.cinema__stage{width:min(100vw,56.25vh);height:100vh}.cinema__controls{width:min(100vw,56.25vh);height:8.5vh;bottom:17.5vh}}
+/* The final still is already the film's final frame; switch without a fade to the first scene. */
+.cinema.intro-ended .scene{transition:none;transform:none}
