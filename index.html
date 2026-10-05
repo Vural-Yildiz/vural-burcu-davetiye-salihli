@@ -8,14 +8,13 @@
   <meta name="description" content="Burcu & Vural — 7 Kasım 2026, 14:00–17:00, Salihli Öğretmenevi" />
   <meta property="og:title" content="Burcu & Vural — Düğün Daveti" />
   <meta property="og:description" content="7 Kasım 2026 · 14:00–17:00 · Salihli Öğretmenevi" />
-  <meta property="og:image" content="cinematic-opening-poster.jpg" />
+  <meta property="og:image" content="opening-closed.webp" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
   <title>Burcu & Vural — Salihli Düğün Daveti</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="preload" as="image" href="opening-closed.webp" type="image/webp" fetchpriority="high" />
   <link rel="preload" as="image" href="opening-open.webp" type="image/webp" />
-  <link rel="preload" as="image" href="cinematic-opening-poster.jpg" type="image/jpeg" fetchpriority="high" />
   <link rel="preload" as="image" href="invitation-final.png" type="image/png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -28,49 +27,28 @@
   </div>
 
   <main class="experience" id="experience">
-    <section class="opening opening--heygen" id="opening" aria-label="Sinematik davet açılışı">
-      <div class="cinema-shell">
-        <div class="cinema-frame" id="cinemaFrame">
-          <video
-            class="cinema-video"
-            id="cinematicIntro"
-            playsinline
-            muted
-            preload="auto"
-            poster="cinematic-opening-poster.jpg"
-            aria-label="Burcu ve Vural sinematik düğün davetiyesi açılışı"
-          >
-            <source src="cinematic-opening.mp4" type="video/mp4" />
-          </video>
-
-          <div class="cinema-vignette" aria-hidden="true"></div>
-          <div class="cinema-grain" aria-hidden="true"></div>
-          <div class="cinema-transition" aria-hidden="true"></div>
-
-          <div class="cinema-ui" id="cinemaUI">
-            <div class="cinema-copy cinema-copy--top">
-              <p class="cinema-place">MANİSA · SALİHLİ</p>
-              <p class="cinema-whisper">Bir ömrün en tatlı telaşındayız · şahidimiz olun.</p>
-            </div>
-
-            <div class="cinema-copy cinema-copy--bottom">
-              <button class="cinema-trigger" id="openInvitation" type="button" aria-controls="invitation">
-                <span class="cinema-trigger__spark" aria-hidden="true">✦</span>
-                <span>DAVETİ AÇ</span>
-                <span class="cinema-trigger__spark" aria-hidden="true">✦</span>
-              </button>
-              <p class="cinema-names">Burcu <span>&amp;</span> Vural</p>
-            </div>
+    <section class="opening opening--photo" id="opening" aria-label="Davet açılışı">
+      <div class="opening-photo" aria-hidden="true">
+        <div class="opening-photo__frame">
+          <div class="opening-photo__loading">
+            <span class="opening-photo__loading-mark">B<span>/</span>V</span>
+            <span class="opening-photo__loading-line"></span>
           </div>
-
-          <div class="cinema-loader" id="cinemaLoader" aria-hidden="true">
-            <span class="cinema-loader__mark">B<span>/</span>V</span>
-            <span class="cinema-loader__line"></span>
-          </div>
+          <img class="opening-photo__art opening-photo__art--closed" id="openingClosedArtwork" src="opening-closed.webp" alt="" decoding="async" fetchpriority="high" />
+          <img class="opening-photo__art opening-photo__art--open" id="openingOpenArtwork" src="opening-open.webp" alt="" decoding="async" />
+          <span class="opening-photo__aura"></span>
+          <span class="opening-photo__horizon"></span>
+          <span class="opening-photo__sweep"></span>
+          <span class="opening-photo__ray opening-photo__ray--a"></span>
+          <span class="opening-photo__ray opening-photo__ray--b"></span>
+          <div class="particles opening-photo__particles" id="particles"></div>
+          <button class="opening-photo__trigger" id="openInvitation" type="button" aria-controls="invitation" aria-label="Daveti aç" disabled>
+            <span class="sr-only">Daveti aç</span>
+          </button>
         </div>
       </div>
 
-      <p class="cinema-status" id="cinemaStatus" aria-live="polite"></p>
+      <p class="opening-photo__status" id="openingAssetStatus" aria-live="polite">Davet hazırlanıyor…</p>
     </section>
 
     <section class="invitation" id="invitation" aria-hidden="true">
