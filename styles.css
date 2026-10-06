@@ -14,3 +14,12 @@
 @supports not (height:100svh){.cinema__stage{width:min(100vw,56.25vh);height:100vh}.cinema__controls{width:min(100vw,56.25vh);height:8.5vh;bottom:17.5vh}}
 /* The final still is already the film's final frame; switch without a fade to the first scene. */
 .cinema.intro-ended .scene{transition:none;transform:none}
+
+/* Keep the film, final artwork and clickable area in the same 9:16 canvas. */
+.cinema__stage{height:min(177.7778vw,100svh);top:50%;bottom:auto;transform:translateY(-50%)}
+.scene{object-fit:contain}
+.cinema__controls{height:min(177.7778vw,100svh);top:50%;bottom:auto;transform:translateY(-50%)!important;pointer-events:none!important}
+.cinema__controls .open-button{top:74%;height:8.5%;pointer-events:auto}
+.cinema.intro-final .cinema__controls{opacity:1}
+.cinema.playing:not(.intro-final) .cinema__controls .open-button{pointer-events:none}
+@supports not (height:100svh){.cinema__stage,.cinema__controls{height:min(177.7778vw,100vh)}}

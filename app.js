@@ -63,6 +63,12 @@ function idle(){
  if(video.getAttribute('src')!==config.src)video.src=config.src;else video.currentTime=0;
  attemptPlay();
 }
+video.addEventListener('timeupdate',()=>{
+ if(mode==='video' && !finished && video.currentTime >= (config.finalActionAt || Infinity)){
+  opening.classList.add('intro-final');$('.cinema__controls').hidden=false;
+  $('#openingAssetStatus').textContent='Daveti açabilirsiniz.';
+ }
+});
 video.addEventListener('ended',()=>{if(mode==='video')endIntro();});
 video.addEventListener('error',()=>{if(mode==='video')fallback();});
 video.addEventListener('playing',()=>{if(mode==='video'){clearTimeout(videoTimer);resume.hidden=true;}});
@@ -78,7 +84,7 @@ document.addEventListener('visibilitychange',()=>{
 });
 reduced.addEventListener('change',()=>{if(reduced.matches && !finished)endIntro();});
 function playMusic(){if(!music.src)music.src='videoplayback.m4a';music.volume=.32;music.loop=true;music.play().then(()=>{$('#soundToggle').hidden=false;$('#soundToggle').textContent='♫ Müziği kapat';}).catch(()=>{});}
-button.addEventListener('click',()=>{if(mode!=='ended')return;playMusic();finish();});
+button.addEventListener('click',()=>{if(mode!=='ended' && !opening.classList.contains('intro-final'))return;playMusic();finish();});
 $('#skipIntro').addEventListener('click',finish);
 $('#replayBtn').addEventListener('click',()=>{music.pause();idle();$('#skipIntro').focus({preventScroll:true});});
 $('#soundToggle').addEventListener('click',()=>{if(music.paused){music.play().then(()=>$('#soundToggle').textContent='♫ Müziği kapat').catch(()=>{});}else{music.pause();$('#soundToggle').textContent='♫ Müziği aç';}});

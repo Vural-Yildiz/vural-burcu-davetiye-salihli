@@ -1,21 +1,11 @@
-# Davetiye filmi
+# Son davetiye filmi
 
-`assets/intro.mp4`: 22 saniye, 720×1280, 25 fps, H.264/yuv420p, AAC stereo, faststart; yaklaşık 4,6 MB. `intro-config.js` bu filmi etkinleştirir.
+`assets/intro-final-20261006.mp4`: 23,85 saniye, 864×1536, 24 fps, H.264/yuv420p ve AAC, faststart. Son onaylı filmin web için sıkıştırılmış kopyasıdır.
 
-İlk 9 saniye HeyGen'den alınan, görsel olarak incelenmiş taş kapı çekimidir. Zarf ve kart bölümü sabit BV yazısı, menteşeli kapak, ayrılan mühür ve yükselen kartla kod üzerinden çizilmiştir. Bu bölüm stilize bir yorumdur; referans fotoğrafların birebir fotogerçekçi yeniden üretimi değildir. Kapıdaki üretilmiş süsleme de onaylı BV logosunun birebir kopyası değildir. Son kare mevcut `assets/scene-10.webp` görseline geçer. Ses, özgün hafif ambient tonlar ve hareketlere zamanlanmış efektlerden oluşur.
+HeyGen mağara girişi ve aynı kapının açılmasını zarf ve kart çekimi izler. Kapalı kapıda referanstaki altın BV monogramı kullanılır. Zarfın önceki metalik sesi kaldırılmış, yumuşak kâğıt efekti eklenmiştir. Kullanıcının damla kaydı korunmuştur. Özgün final görseli yedi saniye sabit kalır. Kapı açılırken üst taraftaki üretim kaynaklı ışık boşluğu hâlâ görülebilir.
 
 ## Ziyaretçi akışı
 
-Video otomatik ve sessiz başlar; kullanıcı sesi açabilir. Film bitince gerçek HTML “Daveti Aç” düğmesi mevcut `invitation-final.png` davetiyesini açar. Otomatik oynatma engellenirse devam düğmesi gösterilir. Video hatasında mevcut 10 fotoğraflı yedek akış çalışır. Açılışı geçme, tekrar izleme ve hareket azaltma tercihleri desteklenir.
+Video sessiz otomatik başlar; ziyaretçi “Sesi aç” ile sesi etkinleştirir. Final görseli görünür görünmez “Daveti Aç” alanı tıklanabilir olur. Düğme mevcut tam davetiyeyi açar. Telefon ve masaüstünde video, son görsel ve düğme aynı 9:16 alanda hizalanır. Açılışı geçme, tekrar oynatma, hareket azaltma ve video yüklenemezse görsel yedek akış korunur.
 
-## Doğrulama
-
-- FFmpeg tüm video ve sesi hata vermeden çözümler; süre ve kodekler doğrulandı.
-- Son kare, onaylı son görselle karşılaştırıldı; küçük H.264 sıkıştırma farkları dışında eşleşir.
-- `node tests/intro-state.cjs`: yedi akış kontrolü geçti.
-- `node --check app.js` ve `git diff --check` geçti.
-- Gerçek Safari/Android cihaz testi yapılmadı. Bu ortamda Chromium kurulumu başarısız olduğu için `tests/intro.spec.cjs` tarayıcı testleri çalıştırılamadı.
-
-## Yeniden üretim
-
-Kaynak kapı MP4'ünü HeyGen projesinden dışa aktarın. `tools/film/README.md` komutları, son kapı karesinden eşleşen zarf arka planını ve tek teslim videosunu üretir. Kaynak kapı dosyası repoya ayrıca eklenmemiştir; tamamlanmış video repodadır.
+Eski `tools/film` betikleri önceki taslağa aittir; bu son sürümü yeniden üretmez.
