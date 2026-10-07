@@ -83,7 +83,14 @@ document.addEventListener('visibilitychange',()=>{
  else if(wasPlaying){wasPlaying=false;attemptPlay();}
 });
 reduced.addEventListener('change',()=>{if(reduced.matches && !finished)endIntro();});
-function playMusic(){if(!music.src)music.src='videoplayback.m4a';music.volume=.32;music.loop=true;music.play().then(()=>{$('#soundToggle').hidden=false;$('#soundToggle').textContent='♫ Müziği kapat';}).catch(()=>{});}
+function playMusic(){
+ if(!music.src)music.src='videoplayback.m4a';
+ const resumeAt=config.musicOffset!==undefined && video.currentTime>0?Math.max(0,video.currentTime-config.musicOffset):0;
+ const seek=()=>{if(Number.isFinite(music.duration)&&music.duration>0)music.currentTime=resumeAt%music.duration;};
+ if(music.readyState>=1)seek();else music.addEventListener('loadedmetadata',seek,{once:true});
+ music.volume=Math.min(1,config.musicVolume||.32);music.loop=true;
+ music.play().then(()=>{$('#soundToggle').hidden=false;$('#soundToggle').textContent='♫ Müziği kapat';}).catch(()=>{});
+}
 button.addEventListener('click',()=>{if(mode!=='ended' && !opening.classList.contains('intro-final'))return;playMusic();finish();});
 $('#skipIntro').addEventListener('click',finish);
 $('#replayBtn').addEventListener('click',()=>{music.pause();idle();$('#skipIntro').focus({preventScroll:true});});
